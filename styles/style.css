@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800&display=swap');
+
+:root {
+    --accent-green: #34A853;
+    --accent-red: #EA5959;
+    --default: rgba(0,0,0,0.3);
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--accent-green);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.todo {
+    padding: 32px;
+    background-color: #fff;
+    width: 90vw;
+    border-radius: 16px;
+}
+
+.todo__new {
+    --size: 50px;
+    display: flex;
+    margin: 16px 0 21px;
+}
+
+.todo__new input {
+    margin-right: 16px;
+    font-size: 18px;
+    padding: 8px 16px;
+    height: var(--size);
+    border: 1px solid var(--default);
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+.todo__add,
+.todo__task-del {
+    cursor: pointer;
+    text-align: center;
+    width: var(--size);
+    height: var(--size);
+    border-radius: var(--size);
+    line-height: calc(var(--size) * 0.95);
+    font-size: 40px;
+    font-weight: 300;
+    background: var(--accent-green);
+    color: white;
+}
+
+.todo__task-del {
+    display: none;
+    margin-left: auto;
+    margin-right: 0;
+    font-size: 44px;
+    line-height: calc(var(--size) * 0.9);
+    background: var(--accent-red);
+}
+
+.todo__list {
+    margin-top: 16px;
+}
+
+.todo__list > *:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+.todo__task {
+    cursor: default;
+    --size: 36px;
+    display: flex;
+    min-height: var(--size);
+    align-items: center;
+}
+
+.todo__task:hover .todo__task-del {
+    display: block;
+}
+
+.todo__task_complete .todo__task-text {
+    text-decoration: line-through;
+    color: var(--default);
+}
+
+.todo__checkbox {
+    margin-right: 16px;
+    padding-top: 1px;
+}
+
+.todo__checkbox input {
+    display: none;
+}
+
+.todo__checkbox input:checked + div {
+    background-color: var(--accent-green);
+}
+
+.todo__checkbox input:checked + div::after {
+    display: block;
+}
+
+.todo__checkbox div {
+    cursor: pointer;
+    --size: 28px;
+    height: var(--size);
+    width: var(--size);
+    border: 1px solid var(--accent-green);
+    border-radius: 4px;
+    position: relative;
+    color: white;
+    font-size: var(--size);
+    line-height: var(--size);
+}
+
+.todo__checkbox div::after {
+    content: "\2713";
+    text-align: center;
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.todo__task-text {
+    font-size: 20px;
+}
