@@ -22,7 +22,7 @@ dom.new.addEventListener("keypress", (event) => {
 
 // Monitor action if user has pressed the add button.
 dom.add.onclick = () => {
-    addTaskHandler()
+    addTaskHandler();
 }
 
 // Observes click on task checkbox.
@@ -50,11 +50,19 @@ dom.tasks.onclick = (event) => {
 const addTaskHandler = () => {
     const newTaskText = dom.new.value;
 
-    if (newTaskText && isTaskExists(newTaskText)) {
-        addTask(newTaskText);
-        dom.new.value = ""; // clear new task input
-        renderTasks();
+    if (newTaskText === "") {
+        return;
     }
+
+    if (isTaskExists(newTaskText)) {
+        alert("Task already exists!");
+
+        return;
+    }
+
+    addTask(newTaskText);
+    dom.new.value = ""; // clear new task input
+    renderTasks();
 }
 
 // Output list of tasks.
@@ -95,16 +103,14 @@ const renderTasksCount = () => {
 }
 
 // Checks existance of a task in tasks array.
-// If task with that text already exists it will correspond prompt.
 const isTaskExists = (text) => {
-    tasks.forEach((task) => {
+    for (const task of tasks) {
         if (task.text === text) {
-            alert("Task already exits!");
-            return false;
+            return true;
         }
-    });
+    }
 
-    return true;
+    return false;
 }
 
 // Adds a task.
