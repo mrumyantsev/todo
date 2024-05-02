@@ -9,7 +9,7 @@ const dom = {
 const tasks = [];
 
 // Listen for pressing Enter key to add a new task.
-dom.new.addEventListener("keypress", event => {
+dom.new.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         addTaskHandler();
     }
@@ -34,7 +34,7 @@ const addTaskHandler = () => {
 // Checks existance of a task in tasks array.
 // If task with that text already exists it will correspond prompt.
 const isTaskExists = (text, list) => {
-    list.forEach(task => {
+    list.forEach((task) => {
         if (task.text === text) {
             alert("Task already exits!");
             return false;
@@ -58,10 +58,10 @@ const addTask = (text, list) => {
 };
 
 // Output list of tasks.
-const renderTasks = list => {
+const renderTasks = (list) => {
     let htmlList = "";
 
-    list.forEach(task => {
+    list.forEach((task) => {
         const cls = task.isComplete
             ? "todo__task todo__task_complete"
             : "todo__task"
@@ -76,7 +76,7 @@ const renderTasks = list => {
                     <input type="checkbox"${checked}>
                     <div class="todo__checkbox-div"></div>
                 </label>
-                <div class="todo__task-text">${task.text}</div>
+                <div class="todo__task-text selectable-all">${task.text}</div>
                 <div class="todo__task-del">-</div>
             </div>
         `;
@@ -90,12 +90,12 @@ const renderTasks = list => {
 };
 
 // Outputs total number of tasks.
-const renderTasksCount = list => {
+const renderTasksCount = (list) => {
     dom.count.innerHTML = list.length;
 };
 
 // Observes click on task checkbox.
-dom.tasks.onclick = event => {
+dom.tasks.onclick = (event) => {
     const target = event.target;
     const isCheckboxEl = target.classList.contains("todo__checkbox-div");
     const isDeleteEl = target.classList.contains("todo__task-del");
@@ -117,7 +117,7 @@ dom.tasks.onclick = event => {
 
 // Changes status of a task.
 const changeTaskStatus = (id, list) => {
-    list.forEach(task => {
+    list.forEach((task) => {
         if (task.id === id) {
             task.isComplete = !task.isComplete;
         }
