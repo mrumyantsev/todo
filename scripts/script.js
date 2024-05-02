@@ -1,3 +1,4 @@
+// Elements of the page.
 const dom = {
     new: document.getElementById("new"),
     add: document.getElementById("add"),
@@ -5,63 +6,62 @@ const dom = {
     count: document.getElementById("count")
 };
 
-// Tasks array.
-const tasks = [];
+// Getting the tasks from localStorage, or creating empty array.
+const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+const main = () => {
+    renderTasks();
+}
 
 // Listen for pressing Enter key to add a new task.
 dom.new.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         addTaskHandler();
     }
-});
+})
 
 // Monitor action if user has pressed the add button.
 dom.add.onclick = () => {
     addTaskHandler()
-};
+}
+
+// Observes click on task checkbox.
+dom.tasks.onclick = (event) => {
+    const target = event.target;
+    const isCheckboxEl = target.classList.contains("todo__checkbox-div");
+    const isDeleteEl = target.classList.contains("todo__task-del");
+
+    if (isCheckboxEl) {
+        const task = target.parentElement.parentElement;
+        const taskId = parseInt(task.getAttribute("id"), 10);
+
+        changeTaskStatus(taskId);
+        renderTasks();
+    } else if (isDeleteEl) {
+        const task = target.parentElement;
+        const taskId = parseInt(task.getAttribute("id"), 10);
+
+        deleteTask(taskId);
+        renderTasks();
+    }
+}
 
 // Adds new task if text field is not empty.
 const addTaskHandler = () => {
     const newTaskText = dom.new.value;
 
-    if (newTaskText && isTaskExists(newTaskText, tasks)) {
-        addTask(newTaskText, tasks);
-        dom.new.value = "";
-        renderTasks(tasks);
+    if (newTaskText && isTaskExists(newTaskText)) {
+        addTask(newTaskText);
+        dom.new.value = ""; // clear new task input
+        renderTasks();
     }
-};
-
-// Checks existance of a task in tasks array.
-// If task with that text already exists it will correspond prompt.
-const isTaskExists = (text, list) => {
-    list.forEach((task) => {
-        if (task.text === text) {
-            alert("Task already exits!");
-            return false;
-        }
-    });
-
-    return true;
-};
-
-// Task adding function.
-const addTask = (text, list) => {
-    const timestamp = Date.now();
-
-    const task = {
-        id: timestamp,
-        text,
-        isComplete: false
-    };
-
-    list.push(task);
-};
+}
 
 // Output list of tasks.
-const renderTasks = (list) => {
+const renderTasks = () => {
     let htmlList = "";
 
-    list.forEach((task) => {
+    tasks.forEach((task) => {
         const cls = task.isComplete
             ? "todo__task todo__task_complete"
             : "todo__task"
@@ -86,49 +86,66 @@ const renderTasks = (list) => {
 
     dom.tasks.innerHTML = htmlList;
 
-    renderTasksCount(list);
-};
+    renderTasksCount();
+}
 
 // Outputs total number of tasks.
-const renderTasksCount = (list) => {
-    dom.count.innerHTML = list.length;
-};
+const renderTasksCount = () => {
+    dom.count.innerHTML = tasks.length;
+}
 
-// Observes click on task checkbox.
-dom.tasks.onclick = (event) => {
-    const target = event.target;
-    const isCheckboxEl = target.classList.contains("todo__checkbox-div");
-    const isDeleteEl = target.classList.contains("todo__task-del");
+// Checks existance of a task in tasks array.
+// If task with that text already exists it will correspond prompt.
+const isTaskExists = (text) => {
+    tasks.forEach((task) => {
+        if (task.text === text) {
+            alert("Task already exits!");
+            return false;
+        }
+    });
 
-    if (isCheckboxEl) {
-        const task = target.parentElement.parentElement;
-        const taskId = parseInt(task.getAttribute("id"), 10);
+    return true;
+}
 
-        changeTaskStatus(taskId, tasks);
-        renderTasks(tasks);
-    } else if (isDeleteEl) {
-        const task = target.parentElement;
-        const taskId = parseInt(task.getAttribute("id"), 10);
+// Adds a task.
+const addTask = (text) => {
+    const timestamp = Date.now();
 
-        deleteTask(taskId, tasks);
-        renderTasks(tasks);
-    }
+    const task = {
+        id: timestamp,
+        text,
+        isComplete: false
+    };
+
+    tasks.push(task);
+
+    updateLocalStorage();
 }
 
 // Changes status of a task.
-const changeTaskStatus = (id, list) => {
-    list.forEach((task) => {
+const changeTaskStatus = (id) => {
+    tasks.forEach((task) => {
         if (task.id === id) {
             task.isComplete = !task.isComplete;
         }
     });
-};
 
-// Removes task.
-const deleteTask = (id, list) => {
-    list.forEach((task, idx) => {
+    updateLocalStorage();
+}
+
+// Removes a task.
+const deleteTask = (id) => {
+    tasks.forEach((task, idx) => {
         if (task.id == id) {
-            list.splice(idx, 1);
+            tasks.splice(idx, 1);
         }
     });
-};
+
+    updateLocalStorage();
+}
+
+const updateLocalStorage = () => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+main();
