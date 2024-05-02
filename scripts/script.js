@@ -14,9 +14,15 @@ const main = () => {
 }
 
 // Listen for pressing Enter key to add a new task.
-dom.new.addEventListener("keypress", (event) => {
+document.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         addTaskHandler();
+    }
+})
+
+document.addEventListener("keydown", (event) => {
+    if (event.shiftKey && (event.key === "Delete")) {
+        removeAllTasksHandler();
     }
 })
 
@@ -61,8 +67,25 @@ const addTaskHandler = () => {
     }
 
     addTask(newTaskText);
+
     dom.new.value = ""; // clear new task input
+
     renderTasks();
+}
+
+// Removes all the existing tasks from tasks array and localStorage.
+const removeAllTasksHandler = () => {
+    let isRemoveAllTasks = false;
+
+    isRemoveAllTasks = confirm("All the tasks will be removed.");
+
+    if (isRemoveAllTasks) {
+        tasks.length = 0;
+
+        updateLocalStorage();
+
+        renderTasks();
+    }
 }
 
 // Output list of tasks.
